@@ -2,11 +2,11 @@
 #	inclue arquivos necessarios.
 session_start();
 
-include_once ("config.php");
-include_once ("connection.php");
-include_once ("function.php");
+include_once ("sql/config.php");
+include_once ("sql/connection.php");
+include_once ("func/function.php");
 
-#	Se o usuario estiver logado, redireciona para o painel.
+#	Se o usuario não estiver logado, redireciona para o painel.
 if (isset($_SESSION['UsuarioLogado'])) {
 	header('location: painel.php');
 	die();
@@ -18,19 +18,20 @@ if (isset($_POST['entrar'])){
 	$email = mysqli_escape_string($conn, $_POST['email']);
 	$senha = mysqli_escape_string($conn, $_POST['senha']);
 #	Efetua a consulta ao banco
-	$teste = DBQuery('usuario', "WHERE email = '$email' AND senha = '$senha'", "*");
+	$teste = DBQuery('*', "administrador", "WHERE email = '$email' AND senha = '$senha'");
 #	Se existir encaminha para o painel, se não mostra erro de login.	
 	if($teste){
-		echo "<script>alert('Bem-Vindo')</script>";
 		$_SESSION['UsuarioLogado'] = true;
 		header("location: painel.php");
 	} else {
 		echo "<script>alert('Erro de Login')</script>";
 	}
-	
 }
 
+
+
 ?>
+
 <html>
 <head>
 <meta charset="utf8">
@@ -41,7 +42,7 @@ if (isset($_POST['entrar'])){
 <div>
 	<form action="" method="POST">
 		<fieldset>
-			<legend>Sistema de Login PHP + MYSQL</legend>
+			<legend>Painel ADM</legend>
 			<p>
 				email: <input type="email" name="email" required />
 			</p>
